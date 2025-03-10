@@ -1,0 +1,33 @@
+name: JFrog OIDC Authentication Demo
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write   # Required for OIDC authentication
+  contents: read  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up JFrog CLI (OIDC)
+        uses: jfrog/setup-jfrog-cli@v3
+        env:
+          JF_URL: https://artifactory.stage.0658b-techopscore.com
+        with:
+          oidc-provider-name: github-oidc  # This must match the provider name in JFrog UI
+
+      - name: Verify JFrog Authentication
+        run: jfrog rt ping  # Should return "OK" if authentication is successful
+
+      - name: Install Dependencies from JFrog Artifactory
+        run: npm install --registry=https://artifactory.stage.0658b-techopscore.com/artifactory/api/npm/npm-opensource/
+
+      - name: Build and Publish to JFrog Artifactory
+        run: npm publish --registry=https://artifactory.stage.0658b-techopscore.com/artifactory/api/npm/npm-appcode-dev/
