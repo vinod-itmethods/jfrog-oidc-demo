@@ -21,7 +21,7 @@ jobs:
         env:
           JF_URL: https://artifactory.stage.0658b-techopscore.com
         with:
-          oidc-provider-name: github-oidc  # This must match the provider name in JFrog UI
+          oidc-provider-name: GitHub-OIDC  # This must match the provider name in JFrog UI
 
       - name: Verify JFrog Authentication
         run: jfrog rt ping  # Should return "OK" if authentication is successful
